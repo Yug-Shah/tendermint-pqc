@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/libs/service"
 )
 
@@ -42,7 +42,8 @@ func newMockPeer(ip net.IP) *mockPeer {
 	if ip == nil {
 		ip = net.IP{127, 0, 0, 1}
 	}
-	nodeKey := NodeKey{PrivKey: ed25519.GenPrivKey()}
+	// nodeKey := NodeKey{PrivKey: ed25519.GenPrivKey()}
+	nodeKey := NodeKey{PrivKey: dilithium.GenPrivKey()}
 	return &mockPeer{
 		ip: ip,
 		id: nodeKey.ID(),

@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
@@ -120,7 +120,8 @@ func TestUnmarshalValidatorKey(t *testing.T) {
 	assert, require := assert.New(t), require.New(t)
 
 	// create some fixed values
-	privKey := ed25519.GenPrivKey()
+	// privKey := ed25519.GenPrivKey()
+	privKey := dilithium.GenPrivKey()
 	pubKey := privKey.PubKey()
 	addr := pubKey.Address()
 	pubBytes := pubKey.Bytes()
@@ -128,14 +129,26 @@ func TestUnmarshalValidatorKey(t *testing.T) {
 	pubB64 := base64.StdEncoding.EncodeToString(pubBytes)
 	privB64 := base64.StdEncoding.EncodeToString(privBytes)
 
+	// 	serialized := fmt.Sprintf(`{
+	//   "address": "%s",
+	//   "pub_key": {
+	//     "type": "tendermint/PubKeyEd25519",
+	//     "value": "%s"
+	//   },
+	//   "priv_key": {
+	//     "type": "tendermint/PrivKeyEd25519",
+	//     "value": "%s"
+	//   }
+	// }`, addr, pubB64, privB64)
+
 	serialized := fmt.Sprintf(`{
   "address": "%s",
   "pub_key": {
-    "type": "tendermint/PubKeyEd25519",
+    "type": "tendermint/PubKeyDilithium",
     "value": "%s"
   },
   "priv_key": {
-    "type": "tendermint/PrivKeyEd25519",
+    "type": "tendermint/PrivKeyDilithium",
     "value": "%s"
   }
 }`, addr, pubB64, privB64)

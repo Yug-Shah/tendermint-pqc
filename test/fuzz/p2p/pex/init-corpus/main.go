@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/p2p"
 	tmp2p "github.com/tendermint/tendermint/proto/tendermint/p2p"
 )
@@ -38,7 +38,8 @@ func initCorpus(rootDir string) {
 
 		// IPv4 addresses
 		for i := 0; i < n; i++ {
-			privKey := ed25519.GenPrivKey()
+			// privKey := ed25519.GenPrivKey()
+			privKey := dilithium.GenPrivKey()
 			addr := fmt.Sprintf(
 				"%s@%v.%v.%v.%v:26656",
 				p2p.PubKeyToID(privKey.PubKey()),
@@ -52,7 +53,8 @@ func initCorpus(rootDir string) {
 		}
 
 		// IPv6 addresses
-		privKey := ed25519.GenPrivKey()
+		// privKey := ed25519.GenPrivKey()
+		privKey := dilithium.GenPrivKey()
 		ipv6a, err := p2p.NewNetAddressString(
 			fmt.Sprintf("%s@[ff02::1:114]:26656", p2p.PubKeyToID(privKey.PubKey())))
 		if err != nil {

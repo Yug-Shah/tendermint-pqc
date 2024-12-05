@@ -15,6 +15,7 @@ import (
 var (
 	valEd25519   = []string{ABCIPubKeyTypeEd25519}
 	valSecp256k1 = []string{ABCIPubKeyTypeSecp256k1}
+	valDilithium = []string{ABCIPubKeyTypeDilithium}
 )
 
 func TestConsensusParamsValidation(t *testing.T) {
@@ -132,6 +133,25 @@ func TestConsensusParamsUpdate(t *testing.T) {
 				},
 			},
 			makeParams(100, 200, 10, 300, 50, valSecp256k1),
+		},
+		//fine updates with dilithium
+		{
+			makeParams(1, 2, 10, 3, 0, valEd25519),
+			&abci.ConsensusParams{
+				Block: &abci.BlockParams{
+					MaxBytes: 100,
+					MaxGas:   200,
+				},
+				Evidence: &tmproto.EvidenceParams{
+					MaxAgeNumBlocks: 300,
+					MaxAgeDuration:  time.Duration(300),
+					MaxBytes:        50,
+				},
+				Validator: &tmproto.ValidatorParams{
+					PubKeyTypes: valDilithium,
+				},
+			},
+			makeParams(100, 200, 10, 300, 50, valDilithium),
 		},
 	}
 	for _, tc := range testCases {

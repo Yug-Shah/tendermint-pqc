@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/libs/bytes"
 	"github.com/tendermint/tendermint/libs/log"
 	"github.com/tendermint/tendermint/proto/tendermint/p2p"
@@ -25,7 +25,8 @@ func TestPeerBasic(t *testing.T) {
 	assert, require := assert.New(t), require.New(t)
 
 	// simulate remote peer
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	t.Cleanup(rp.Stop)
 
@@ -55,7 +56,8 @@ func TestPeerSend(t *testing.T) {
 	config := cfg
 
 	// simulate remote peer
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: config}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: config}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: config}
 	rp.Start()
 	t.Cleanup(rp.Stop)
 
@@ -87,7 +89,8 @@ func createOutboundPeerAndPerformHandshake(
 	msgTypeByChID := map[byte]proto.Message{
 		testCh: &p2p.Message{},
 	}
-	pk := ed25519.GenPrivKey()
+	// pk := ed25519.GenPrivKey()
+	pk := dilithium.GenPrivKey()
 	pc, err := testOutboundPeerConn(addr, config, false, pk)
 	if err != nil {
 		return nil, err

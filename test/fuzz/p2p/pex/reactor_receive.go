@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/libs/log"
 	"github.com/tendermint/tendermint/libs/service"
 	"github.com/tendermint/tendermint/p2p"
@@ -55,7 +55,8 @@ func newFuzzPeer() *fuzzPeer {
 	return fp
 }
 
-var privKey = ed25519.GenPrivKey()
+// var privKey = ed25519.GenPrivKey()
+var privKey = dilithium.GenPrivKey()
 var nodeID = p2p.PubKeyToID(privKey.PubKey())
 var defaultNodeInfo = p2p.DefaultNodeInfo{
 	ProtocolVersion: p2p.NewProtocolVersion(

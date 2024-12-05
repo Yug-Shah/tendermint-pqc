@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/libs/log"
 	"github.com/tendermint/tendermint/privval"
 	"github.com/tendermint/tendermint/types"
@@ -96,7 +96,8 @@ func TestRemoteSignerPublicKeyCheckFailed(t *testing.T) {
 	harnessTest(
 		t,
 		func(th *TestHarness) *privval.SignerServer {
-			return newMockSignerServer(t, th, ed25519.GenPrivKey(), false, false)
+			// return newMockSignerServer(t, th, ed25519.GenPrivKey(), false, false)
+			return newMockSignerServer(t, th, dilithium.GenPrivKey(), false, false)
 		},
 		ErrTestPublicKeyFailed,
 	)
@@ -136,7 +137,8 @@ func newMockSignerServer(
 		privval.DialTCPFn(
 			th.addr,
 			time.Duration(defaultConnDeadline)*time.Millisecond,
-			ed25519.GenPrivKey(),
+			// ed25519.GenPrivKey(),
+			dilithium.GenPrivKey(),
 		),
 	)
 
@@ -167,14 +169,15 @@ func harnessTest(t *testing.T, signerServerMaker func(th *TestHarness) *privval.
 
 func makeConfig(t *testing.T, acceptDeadline, acceptRetries int) TestHarnessConfig {
 	return TestHarnessConfig{
-		BindAddr:         privval.GetFreeLocalhostAddrPort(),
-		KeyFile:          makeTempFile("tm-testharness-keyfile", keyFileContents),
-		StateFile:        makeTempFile("tm-testharness-statefile", stateFileContents),
-		GenesisFile:      makeTempFile("tm-testharness-genesisfile", genesisFileContents),
-		AcceptDeadline:   time.Duration(acceptDeadline) * time.Millisecond,
-		ConnDeadline:     time.Duration(defaultConnDeadline) * time.Millisecond,
-		AcceptRetries:    acceptRetries,
-		SecretConnKey:    ed25519.GenPrivKey(),
+		BindAddr:       privval.GetFreeLocalhostAddrPort(),
+		KeyFile:        makeTempFile("tm-testharness-keyfile", keyFileContents),
+		StateFile:      makeTempFile("tm-testharness-statefile", stateFileContents),
+		GenesisFile:    makeTempFile("tm-testharness-genesisfile", genesisFileContents),
+		AcceptDeadline: time.Duration(acceptDeadline) * time.Millisecond,
+		ConnDeadline:   time.Duration(defaultConnDeadline) * time.Millisecond,
+		AcceptRetries:  acceptRetries,
+		// SecretConnKey:    ed25519.GenPrivKey(),
+		SecretConnKey:    dilithium.GenPrivKey(),
 		ExitWhenComplete: false,
 	}
 }

@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/libs/log"
 	tmsync "github.com/tendermint/tendermint/libs/sync"
 	"github.com/tendermint/tendermint/p2p/conn"
@@ -273,7 +273,8 @@ func TestSwitchPeerFilter(t *testing.T) {
 	})
 
 	// simulate remote peer
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	t.Cleanup(rp.Stop)
 
@@ -324,7 +325,8 @@ func TestSwitchPeerFilterTimeout(t *testing.T) {
 	})
 
 	// simulate remote peer
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	defer rp.Stop()
 
@@ -355,7 +357,8 @@ func TestSwitchPeerFilterDuplicate(t *testing.T) {
 	})
 
 	// simulate remote peer
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	defer rp.Stop()
 
@@ -405,7 +408,8 @@ func TestSwitchStopsNonPersistentPeerOnError(t *testing.T) {
 	})
 
 	// simulate remote peer
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	defer rp.Stop()
 
@@ -498,7 +502,8 @@ func TestSwitchReconnectsToOutboundPersistentPeer(t *testing.T) {
 	})
 
 	// 1. simulate failure by closing connection
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	defer rp.Stop()
 
@@ -519,7 +524,8 @@ func TestSwitchReconnectsToOutboundPersistentPeer(t *testing.T) {
 
 	// 2. simulate first time dial failure
 	rp = &remotePeer{
-		PrivKey: ed25519.GenPrivKey(),
+		// PrivKey: ed25519.GenPrivKey(),
+		PrivKey: dilithium.GenPrivKey(),
 		Config:  cfg,
 		// Use different interface to prevent duplicate IP filter, this will break
 		// beyond two peers.
@@ -548,7 +554,8 @@ func TestSwitchReconnectsToInboundPersistentPeer(t *testing.T) {
 	})
 
 	// 1. simulate failure by closing the connection
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	defer rp.Stop()
 
@@ -580,7 +587,8 @@ func TestSwitchDialPeersAsync(t *testing.T) {
 		}
 	})
 
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 	rp.Start()
 	defer rp.Stop()
 
@@ -630,7 +638,8 @@ func TestSwitchAcceptRoutine(t *testing.T) {
 		unconditionalPeerIDs = make([]string, unconditionalPeersNum)
 	)
 	for i := 0; i < unconditionalPeersNum; i++ {
-		peer := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+		// peer := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+		peer := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 		peer.Start()
 		unconditionalPeers[i] = peer
 		unconditionalPeerIDs[i] = string(peer.ID())
@@ -653,7 +662,8 @@ func TestSwitchAcceptRoutine(t *testing.T) {
 	// 1. check we connect up to MaxNumInboundPeers
 	peers := make([]*remotePeer, 0)
 	for i := 0; i < cfg.MaxNumInboundPeers; i++ {
-		peer := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+		// peer := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+		peer := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
 		peers = append(peers, peer)
 		peer.Start()
 		c, err := peer.Dial(sw.NetAddress())
@@ -673,7 +683,8 @@ func TestSwitchAcceptRoutine(t *testing.T) {
 	assert.Equal(t, cfg.MaxNumInboundPeers, sw.Peers().Size())
 
 	// 2. check we close new connections if we already have MaxNumInboundPeers peers
-	peer := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	peer := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
+	// peer := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
 	peer.Start()
 	conn, err := peer.Dial(sw.NetAddress())
 	require.NoError(t, err)
@@ -806,7 +817,8 @@ func TestSwitchInitPeerIsNotCalledBeforeRemovePeer(t *testing.T) {
 	})
 
 	// add peer
-	rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
+	rp := &remotePeer{PrivKey: dilithium.GenPrivKey(), Config: cfg}
+	// rp := &remotePeer{PrivKey: ed25519.GenPrivKey(), Config: cfg}
 	rp.Start()
 	defer rp.Stop()
 	_, err = rp.Dial(sw.NetAddress())

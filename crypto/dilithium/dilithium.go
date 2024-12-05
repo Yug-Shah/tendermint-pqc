@@ -17,8 +17,8 @@ import (
 var _ crypto.PrivKey = PrivKey{}
 
 const (
-	PrivKeyName = "tendermint/PrivKeyDilithium2"
-	PubKeyName  = "tendermint/PubKeyDilithium2"
+	PrivKeyName = "tendermint/PrivKeyDilithium"
+	PubKeyName  = "tendermint/PubKeyDilithium"
 
 	// PubKeySize is is the size, in bytes, of public keys as used in this package.
 	PubKeySize = 1312
@@ -96,11 +96,27 @@ func genPrivKey(rand io.Reader) PrivKey {
 	return PrivKey(sk.Bytes())
 }
 
+// GenPrivKeyFromSecret hashes the secret with SHA2, and uses
+// that 32 byte output to create the private key.
+// NOTE: secret should be the output of a KDF like bcrypt,
+// if it's derived from user input.
+func GenPrivKeyFromSeed(secret []byte) PrivKey {
+	seed := crypto.Sha256(secret) // Not Ripemd160 because we want 32 bytes.
+	if len(seed) != 32 {
+		panic("seed must be exactly 32 bytes")
+	}
+
+	var seedArray [32]byte
+	copy(seedArray[:], seed)
+
+	_, sk := dilithium2.NewKeyFromSeed(&seedArray)
+	return PrivKey(sk.Bytes())
+}
+
 //-------------------------------------
 
 var _ crypto.PubKey = PubKey{}
 
-// PubKeyEd25519 implements crypto.PubKey for the Ed25519 signature scheme.
 type PubKey []byte
 
 // Address is the SHA256-20 of the raw pubkey bytes.

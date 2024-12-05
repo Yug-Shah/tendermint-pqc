@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
 	"github.com/tendermint/tendermint/privval"
 	"github.com/tendermint/tendermint/state"
 
@@ -74,7 +74,8 @@ type TestHarnessConfig struct {
 	ConnDeadline   time.Duration
 	AcceptRetries  int
 
-	SecretConnKey ed25519.PrivKey
+	// SecretConnKey ed25519.PrivKey
+	SecretConnKey dilithium.PrivKey
 
 	ExitWhenComplete bool // Whether or not to call os.Exit when the harness has completed.
 }

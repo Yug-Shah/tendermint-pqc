@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/libs/log"
 	"github.com/tendermint/tendermint/privval"
 	"github.com/tendermint/tendermint/tools/tm-signer-harness/internal"
@@ -109,14 +109,15 @@ Usage:
 func runTestHarness(acceptRetries int, bindAddr, tmhome string) {
 	tmhome = internal.ExpandPath(tmhome)
 	cfg := internal.TestHarnessConfig{
-		BindAddr:         bindAddr,
-		KeyFile:          filepath.Join(tmhome, "config", "priv_validator_key.json"),
-		StateFile:        filepath.Join(tmhome, "data", "priv_validator_state.json"),
-		GenesisFile:      filepath.Join(tmhome, "config", "genesis.json"),
-		AcceptDeadline:   time.Duration(defaultAcceptDeadline) * time.Second,
-		AcceptRetries:    acceptRetries,
-		ConnDeadline:     time.Duration(defaultConnDeadline) * time.Second,
-		SecretConnKey:    ed25519.GenPrivKey(),
+		BindAddr:       bindAddr,
+		KeyFile:        filepath.Join(tmhome, "config", "priv_validator_key.json"),
+		StateFile:      filepath.Join(tmhome, "data", "priv_validator_state.json"),
+		GenesisFile:    filepath.Join(tmhome, "config", "genesis.json"),
+		AcceptDeadline: time.Duration(defaultAcceptDeadline) * time.Second,
+		AcceptRetries:  acceptRetries,
+		ConnDeadline:   time.Duration(defaultConnDeadline) * time.Second,
+		// SecretConnKey:    ed25519.GenPrivKey(),
+		SecretConnKey:    dilithium.GenPrivKey(),
 		ExitWhenComplete: true,
 	}
 	harness, err := internal.NewTestHarness(logger, cfg)
@@ -134,7 +135,8 @@ func extractKey(tmhome, outputPath string) {
 	keyFile := filepath.Join(internal.ExpandPath(tmhome), "config", "priv_validator_key.json")
 	stateFile := filepath.Join(internal.ExpandPath(tmhome), "data", "priv_validator_state.json")
 	fpv := privval.LoadFilePV(keyFile, stateFile)
-	pkb := []byte(fpv.Key.PrivKey.(ed25519.PrivKey))
+	// pkb := []byte(fpv.Key.PrivKey.(ed25519.PrivKey))
+	pkb := []byte(fpv.Key.PrivKey.(dilithium.PrivKey))
 	if err := os.WriteFile(internal.ExpandPath(outputPath), pkb[:32], 0o600); err != nil {
 		logger.Info("Failed to write private key", "output", outputPath, "err", err)
 		os.Exit(1)

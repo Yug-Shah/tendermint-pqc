@@ -51,9 +51,11 @@ func DefaultEvidenceParams() tmproto.EvidenceParams {
 
 // DefaultValidatorParams returns a default ValidatorParams, which allows
 // only ed25519 pubkeys.
+// testing with Dilithium pubkeys
 func DefaultValidatorParams() tmproto.ValidatorParams {
 	return tmproto.ValidatorParams{
-		PubKeyTypes: []string{ABCIPubKeyTypeEd25519},
+		// PubKeyTypes: []string{ABCIPubKeyTypeEd25519},
+		PubKeyTypes: []string{ABCIPubKeyTypeDilithium},
 	}
 }
 

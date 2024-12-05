@@ -16,7 +16,7 @@ import (
 
 	"github.com/tendermint/tendermint/abci/example/kvstore"
 	cfg "github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	"github.com/tendermint/tendermint/evidence"
 	"github.com/tendermint/tendermint/libs/log"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
@@ -141,7 +141,8 @@ func TestNodeSetPrivValTCP(t *testing.T) {
 	defer os.RemoveAll(config.RootDir)
 	config.BaseConfig.PrivValidatorListenAddr = addr
 
-	dialer := privval.DialTCPFn(addr, 100*time.Millisecond, ed25519.GenPrivKey())
+	// dialer := privval.DialTCPFn(addr, 100*time.Millisecond, ed25519.GenPrivKey())
+	dialer := privval.DialTCPFn(addr, 100*time.Millisecond, dilithium.GenPrivKey())
 	dialerEndpoint := privval.NewSignerDialerEndpoint(
 		log.TestingLogger(),
 		dialer,

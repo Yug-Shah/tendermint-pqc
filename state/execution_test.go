@@ -11,7 +11,7 @@ import (
 
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	cryptoenc "github.com/tendermint/tendermint/crypto/encoding"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 	"github.com/tendermint/tendermint/libs/log"
@@ -221,14 +221,17 @@ func TestBeginBlockByzantineValidators(t *testing.T) {
 }
 
 func TestValidateValidatorUpdates(t *testing.T) {
-	pubkey1 := ed25519.GenPrivKey().PubKey()
-	pubkey2 := ed25519.GenPrivKey().PubKey()
+	// pubkey1 := ed25519.GenPrivKey().PubKey()
+	// pubkey2 := ed25519.GenPrivKey().PubKey()
+	pubkey1 := dilithium.GenPrivKey().PubKey()
+	pubkey2 := dilithium.GenPrivKey().PubKey()
 	pk1, err := cryptoenc.PubKeyToProto(pubkey1)
 	assert.NoError(t, err)
 	pk2, err := cryptoenc.PubKeyToProto(pubkey2)
 	assert.NoError(t, err)
 
-	defaultValidatorParams := tmproto.ValidatorParams{PubKeyTypes: []string{types.ABCIPubKeyTypeEd25519}}
+	// defaultValidatorParams := tmproto.ValidatorParams{PubKeyTypes: []string{types.ABCIPubKeyTypeEd25519}}
+	defaultValidatorParams := tmproto.ValidatorParams{PubKeyTypes: []string{types.ABCIPubKeyTypeDilithium}}
 
 	testCases := []struct {
 		name string
@@ -278,9 +281,11 @@ func TestValidateValidatorUpdates(t *testing.T) {
 }
 
 func TestUpdateValidators(t *testing.T) {
-	pubkey1 := ed25519.GenPrivKey().PubKey()
+	// pubkey1 := ed25519.GenPrivKey().PubKey()
+	pubkey1 := dilithium.GenPrivKey().PubKey()
 	val1 := types.NewValidator(pubkey1, 10)
-	pubkey2 := ed25519.GenPrivKey().PubKey()
+	// pubkey2 := ed25519.GenPrivKey().PubKey()
+	pubkey2 := dilithium.GenPrivKey().PubKey()
 	val2 := types.NewValidator(pubkey2, 20)
 
 	pk, err := cryptoenc.PubKeyToProto(pubkey1)
@@ -389,7 +394,8 @@ func TestEndBlockValidatorUpdates(t *testing.T) {
 	block := makeBlock(state, 1)
 	blockID := types.BlockID{Hash: block.Hash(), PartSetHeader: block.MakePartSet(testPartSize).Header()}
 
-	pubkey := ed25519.GenPrivKey().PubKey()
+	// pubkey := ed25519.GenPrivKey().PubKey()
+	pubkey := dilithium.GenPrivKey().PubKey()
 	pk, err := cryptoenc.PubKeyToProto(pubkey)
 	require.NoError(t, err)
 	app.ValidatorUpdates = []abci.ValidatorUpdate{

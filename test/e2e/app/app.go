@@ -47,7 +47,7 @@ type Config struct {
 	RetainBlocks uint64 `toml:"retain_blocks"`
 
 	// KeyType sets the curve that will be used by validators.
-	// Options are ed25519 & secp256k1
+	// Options are ed25519 & secp256k1 & dilithium2
 	KeyType string `toml:"key_type"`
 
 	// PersistInterval specifies the height interval at which the application

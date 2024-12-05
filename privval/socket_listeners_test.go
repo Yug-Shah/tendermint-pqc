@@ -6,14 +6,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 )
 
 //-------------------------------------------
 // helper funcs
 
-func newPrivKey() ed25519.PrivKey {
-	return ed25519.GenPrivKey()
+// func newPrivKey() ed25519.PrivKey {
+// 	return ed25519.GenPrivKey()
+// }
+
+func newPrivKey() dilithium.PrivKey {
+	return dilithium.GenPrivKey()
 }
 
 //-------------------------------------------

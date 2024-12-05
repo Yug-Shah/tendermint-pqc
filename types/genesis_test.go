@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmtime "github.com/tendermint/tendermint/types/time"
 )
@@ -76,7 +76,8 @@ func TestGenesisGood(t *testing.T) {
 	_, err := GenesisDocFromJSON(genDocBytes)
 	assert.NoError(t, err, "expected no error for good genDoc json")
 
-	pubkey := ed25519.GenPrivKey().PubKey()
+	// pubkey := ed25519.GenPrivKey().PubKey()
+	pubkey := dilithium.GenPrivKey().PubKey()
 	// create a base gendoc from struct
 	baseGenDoc := &GenesisDoc{
 		ChainID:    "abc",
@@ -152,7 +153,8 @@ func TestGenesisValidatorHash(t *testing.T) {
 }
 
 func randomGenesisDoc() *GenesisDoc {
-	pubkey := ed25519.GenPrivKey().PubKey()
+	// pubkey := ed25519.GenPrivKey().PubKey()
+	pubkey := dilithium.GenPrivKey().PubKey()
 	return &GenesisDoc{
 		GenesisTime:     tmtime.Now(),
 		ChainID:         "abc",

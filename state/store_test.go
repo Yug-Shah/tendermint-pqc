@@ -13,7 +13,7 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	cfg "github.com/tendermint/tendermint/config"
 	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/dilithium"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmstate "github.com/tendermint/tendermint/proto/tendermint/state"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -114,7 +114,8 @@ func TestPruneStates(t *testing.T) {
 			stateStore := sm.NewStore(db, sm.StoreOptions{
 				DiscardABCIResponses: false,
 			})
-			pk := ed25519.GenPrivKey().PubKey()
+			// pk := ed25519.GenPrivKey().PubKey()
+			pk := dilithium.GenPrivKey().PubKey()
 
 			// Generate a bunch of state data. Validators change for heights ending with 3, and
 			// parameters when ending with 5.
